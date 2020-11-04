@@ -1,0 +1,25 @@
+{
+  "name": "fend-capstone",
+  "version": "1.0.0",
+  "description": "Capstone project of Udacity's Front End Nanodegree program. A travel booking site clone that pulls data from a local server as well as multiple external APIs.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nnnaif/fend-capstone.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nnnaif/fend-capstone/issues"
+  },
+  "homepage": "https://github.com/nnnaif/fend-capstone#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
