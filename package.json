@@ -2,9 +2,11 @@
   "name": "fend-capstone",
   "version": "1.0.0",
   "description": "Capstone project of Udacity's Front End Nanodegree program. A travel booking site clone that pulls data from a local server as well as multiple external APIs.",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/server/server.js"
+    "start": "nodemon src/server/server.js",
+    "build:dev": "webpack-dev-server --config webpack.dev.js --open"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,17 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.6"
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^5.0.1",
+    "html-webpack-plugin": "^4.5.0",
+    "mini-css-extract-plugin": "^1.2.1",
+    "nodemon": "^2.0.6",
+    "sass": "^1.29.0",
+    "sass-loader": "^10.0.5",
+    "webpack": "^5.4.0",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.11.0"
   }
 }
