@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
   entry: './src/client/index.js',
   mode: 'development',
+  // devtool: 'source-map',
   output: {
     library: 'Client',
   },
@@ -22,7 +23,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
   },
@@ -30,6 +31,5 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: './src/client/views/index.html',
     }),
-    new MiniCssExtractPlugin(),
   ],
 };

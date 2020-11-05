@@ -1,3 +1,3 @@
 import './styles/bootstrap.scss';
 
-import {} from './js/app.js';
+// import {} from './js/app.js';
