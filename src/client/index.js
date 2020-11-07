@@ -1,4 +1,5 @@
 import './styles/bootstrap.scss';
 import './styles/custom.scss';
 
-// import {} from './js/app.js';
+import { tripFormHandler } from './js/app.js';
+export { tripFormHandler };
