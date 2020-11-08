@@ -1,4 +1,3 @@
-let apiResults = {};
 /* Trip form event Listener */
 document.getElementById('tripForm').addEventListener('submit', (event) => {
   event.preventDefault();
@@ -11,24 +10,32 @@ document.getElementById('tripForm').addEventListener('submit', (event) => {
 
 /* Function to handle form input coming from event listener */
 const tripFormHandler = (formData) => {
+  const tripInfo = {
+    destination: formData.destination,
+    date: formData.date,
+  };
   getCoords(formData.destination)
     .then((coords) => {
       return getTripWeather(coords, formData.date);
     })
     .then((weatherInfo) => {
-      apiResults.weather = weatherInfo;
+      tripInfo.weather = weatherInfo;
       return getDestImage(formData.destination);
     })
     .then((images) => {
-      apiResults.imageURL = images.hits[0].webformatURL;
+      // If image search returned no results, use placeholder
+      if (images.hits.length < 1) tripInfo.imageURL = './media/placeholder.png';
+      else tripInfo.imageURL = images.hits[0].webformatURL;
+      console.log(tripInfo);
+      addTrip(tripInfo);
     });
 };
 
 // if less than 7 day away => getCurrentWeather(), else getWeatherForecast(date === tripDate)
 const getTripWeather = (coords, tripDate) => {
-  const currentDate = new Date();
-  currentDate.setDate(currentDate.getDate() + 7);
-  if (new Date(tripDate) <= currentDate) return getCurrentWeather(coords);
+  const weekDate = new Date();
+  weekDate.setDate(weekDate.getDate() + 7);
+  if (new Date(tripDate) <= weekDate) return getCurrentWeather(coords);
   else {
     return getForecastWeather(coords, tripDate);
   }
@@ -89,4 +96,20 @@ const getDestImage = (destination) => {
   return fetch(
     'https://pixabay.com/api/?key=' + apiKey + '&q=' + destination,
   ).then((res) => res.json());
+};
+
+// Dynamically add trips to the page
+const addTrip = (tripInfo) => {
+  const tripsSection = document.getElementById('trips');
+  const newTrip = document.createElement('div');
+  newTrip.className = 'card mb-3';
+  newTrip.innerHTML = `
+  <img src="${tripInfo.imageURL}"class="card-img" alt="${tripInfo.destination}">
+  <div class="card-body">
+    <h5 class="card-title">${tripInfo.destination}</h5>
+    <p class="card-text">${tripInfo.weather}</p>
+    <p class="card-text">${tripInfo.date}</p>
+  </div>
+`;
+  tripsSection.appendChild(newTrip);
 };
