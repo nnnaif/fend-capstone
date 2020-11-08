@@ -11,11 +11,21 @@ document.getElementById('tripForm').addEventListener('submit', (event) => {
 /* Function to handle form input coming from event listener */
 const tripFormHandler = (formData) => {
   console.log(formData);
-  getCoords(formData.destination).then((res) => {
-    console.log(res);
-  });
+  getCoords(formData.destination)
+    .then((coords) => {
+      return getTripWeather(coords, formData.date);
+    })
+    .then((res) => console.log(res));
 };
 
+// if less than 7 day away => getCurrentWeather(), else getWeatherForecast(date === tripDate)
+const getTripWeather = (coords, tripDate) => {
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 7);
+  if (new Date(tripDate).getDate() <= currentDate.getDate())
+    return getCurrentWeather(coords);
+  else return getForecastWeather(coords, tripDate);
+};
 const getCoords = (cityName) => {
   const apiUser = 'fend_naif';
   return fetch(
@@ -26,7 +36,43 @@ const getCoords = (cityName) => {
       return {
         latitude: res.geonames[0].lat,
         longitude: res.geonames[0].lng,
-        country: res.geonames[0].countryName,
+        // country: res.geonames[0].countryName,
       };
+    });
+};
+
+const getCurrentWeather = (coords) => {
+  const apiKey = 'ecbf81b83784483fa128fe478cfe272d';
+  return fetch(
+    'https://api.weatherbit.io/v2.0/current?key=' +
+      apiKey +
+      '&lat=' +
+      coords.latitude +
+      '&lon=' +
+      coords.longitude,
+  )
+    .then((res) => res.json())
+    .then((currentWeather) => currentWeather.data[0].weather.description);
+};
+
+// Returns the exact forecasted weather of a specific day if it's within 16 days, else it will return the last possible forecast
+const getForecastWeather = (coords, tripDate) => {
+  const apiKey = 'ecbf81b83784483fa128fe478cfe272d';
+  return fetch(
+    'https://api.weatherbit.io/v2.0/forecast/daily?key=' +
+      apiKey +
+      '&lat=' +
+      coords.latitude +
+      '&lon=' +
+      coords.longitude +
+      '&days=16',
+  )
+    .then((res) => res.json())
+    .then((forecast) => {
+      for (dayForecast of forecast.data) {
+        if (dayForecast.valid_date === tripDate)
+          return dayForecast.weather.description;
+      }
+      return 'No weather data for current date.';
     });
 };
