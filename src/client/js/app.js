@@ -1,3 +1,4 @@
+let apiResults = {};
 /* Trip form event Listener */
 document.getElementById('tripForm').addEventListener('submit', (event) => {
   event.preventDefault();
@@ -10,12 +11,17 @@ document.getElementById('tripForm').addEventListener('submit', (event) => {
 
 /* Function to handle form input coming from event listener */
 const tripFormHandler = (formData) => {
-  console.log(formData);
   getCoords(formData.destination)
     .then((coords) => {
       return getTripWeather(coords, formData.date);
     })
-    .then((res) => console.log(res));
+    .then((weatherInfo) => {
+      apiResults.weather = weatherInfo;
+      return getDestImage(formData.destination);
+    })
+    .then((images) => {
+      apiResults.imageURL = images.hits[0].webformatURL;
+    });
 };
 
 // if less than 7 day away => getCurrentWeather(), else getWeatherForecast(date === tripDate)
@@ -76,4 +82,11 @@ const getForecastWeather = (coords, tripDate) => {
       }
       return 'No weather data for current date.';
     });
+};
+
+const getDestImage = (destination) => {
+  const apiKey = '19032778-d80913ab37216642ffa2185cf';
+  return fetch(
+    'https://pixabay.com/api/?key=' + apiKey + '&q=' + destination,
+  ).then((res) => res.json());
 };
