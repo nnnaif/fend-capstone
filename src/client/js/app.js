@@ -22,9 +22,10 @@ const tripFormHandler = (formData) => {
 const getTripWeather = (coords, tripDate) => {
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + 7);
-  if (new Date(tripDate).getDate() <= currentDate.getDate())
-    return getCurrentWeather(coords);
-  else return getForecastWeather(coords, tripDate);
+  if (new Date(tripDate) <= currentDate) return getCurrentWeather(coords);
+  else {
+    return getForecastWeather(coords, tripDate);
+  }
 };
 const getCoords = (cityName) => {
   const apiUser = 'fend_naif';
@@ -55,7 +56,7 @@ const getCurrentWeather = (coords) => {
     .then((currentWeather) => currentWeather.data[0].weather.description);
 };
 
-// Returns the exact forecasted weather of a specific day if it's within 16 days, else it will return the last possible forecast
+// Returns the exact forecasted weather of a specific day if it's within 16 days.
 const getForecastWeather = (coords, tripDate) => {
   const apiKey = 'ecbf81b83784483fa128fe478cfe272d';
   return fetch(
