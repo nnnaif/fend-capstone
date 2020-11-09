@@ -4,7 +4,7 @@
   "description": "Capstone project of Udacity's Front End Nanodegree program. A travel booking site clone that pulls data from a local server as well as multiple external APIs.",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon src/server/server.js",
     "dev": "webpack-dev-server --config webpack.dev.js --open",
     "build": "rm -rf dist && webpack --config webpack.prod.js"
@@ -29,6 +29,7 @@
     "css-loader": "^5.0.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
+    "jest": "^26.6.3",
     "mini-css-extract-plugin": "^1.2.1",
     "nodemon": "^2.0.6",
     "optimize-css-assets-webpack-plugin": "^5.0.4",

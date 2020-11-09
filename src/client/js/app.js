@@ -1,15 +1,17 @@
 /* Trip form event Listener */
-document.getElementById('tripForm').addEventListener('submit', (event) => {
-  event.preventDefault();
-  const formData = {
-    destination: event.target[0].value,
-    date: event.target[1].value,
-  };
-  tripFormHandler(formData);
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('tripForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const formData = {
+      destination: event.target[0].value,
+      date: event.target[1].value,
+    };
+    tripFormHandler(formData);
+  });
 });
 
 /* Function to handle form input coming from event listener */
-const tripFormHandler = (formData) => {
+export const tripFormHandler = (formData) => {
   const tripInfo = {
     destination: formData.destination,
     date: formData.date,
@@ -90,8 +92,9 @@ const getForecastWeather = (coords, tripDate) => {
       return 'No weather data for current date.';
     });
 };
+export const getDestImage = (destination) => {
+  if (!destination) throw new Error('Destination not provided');
 
-const getDestImage = (destination) => {
   const apiKey = '19032778-d80913ab37216642ffa2185cf';
   return fetch(
     'https://pixabay.com/api/?key=' + apiKey + '&q=' + destination,
