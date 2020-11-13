@@ -6,13 +6,13 @@ const app = express();
 const port = 3000;
 
 /* Middleware*/
-// JSON parsing
-app.use(express.json());
-
 // Initialize the main project folder
 app.use(express.static('dist'));
 
 /* Routes */
+app.get('/', (req, res) => {
+  res.sendFile('dist/index.html');
+});
 
 // Setup Server
 app.listen(port, () => {

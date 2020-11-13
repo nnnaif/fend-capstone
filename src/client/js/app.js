@@ -1,5 +1,10 @@
 /* Trip form event Listener */
 document.addEventListener('DOMContentLoaded', () => {
+  // Set min date to today
+  document
+    .getElementById('trip-date')
+    .setAttribute('min', new Date().toISOString().split('T')[0]);
+  /* Form handler event listener */
   document.getElementById('tripForm').addEventListener('submit', (event) => {
     event.preventDefault();
     const formData = {
@@ -28,7 +33,6 @@ export const tripFormHandler = (formData) => {
       // If image search returned no results, use placeholder
       if (images.hits.length < 1) tripInfo.imageURL = './media/placeholder.png';
       else tripInfo.imageURL = images.hits[0].webformatURL;
-      console.log(tripInfo);
       addTrip(tripInfo);
     });
 };
@@ -85,9 +89,10 @@ const getForecastWeather = (coords, tripDate) => {
   )
     .then((res) => res.json())
     .then((forecast) => {
-      for (dayForecast of forecast.data) {
-        if (dayForecast.valid_date === tripDate)
-          return dayForecast.weather.description;
+      const forecasts = forecast.data;
+      for (forecast of forecasts) {
+        if (forecast.valid_date === tripDate)
+          return forecast.weather.description;
       }
       return 'No weather data for current date.';
     });
@@ -103,16 +108,38 @@ export const getDestImage = (destination) => {
 
 // Dynamically add trips to the page
 const addTrip = (tripInfo) => {
+  const daysLeft = date_diff_indays(
+    new Date().toISOString().split('T')[0],
+    tripInfo.date,
+  );
   const tripsSection = document.getElementById('trips');
   const newTrip = document.createElement('div');
   newTrip.className = 'card mb-3';
+  newTrip.id = new Date();
   newTrip.innerHTML = `
   <img src="${tripInfo.imageURL}"class="card-img" alt="${tripInfo.destination}">
   <div class="card-body">
-    <h5 class="card-title">${tripInfo.destination}</h5>
-    <p class="card-text">${tripInfo.weather}</p>
-    <p class="card-text">${tripInfo.date}</p>
-  </div>
+    <h5 class="card-title">Destination: ${tripInfo.destination}</h5>
+    <p class="card-text">Forecast Weather: ${tripInfo.weather}</p>
+    <p class="card-text">Departure Date: ${tripInfo.date} || ${daysLeft} days left</p>
+    <button type="button" class="btn btn-danger">Remove Trip</button>
+    </div>
 `;
   tripsSection.appendChild(newTrip);
+
+  // Removes a trip when its remove button is clicked
+  newTrip.querySelector('button').addEventListener('click', (event) => {
+    newTrip.remove();
+  });
+};
+
+// Function to get differnce in days between two dates
+const date_diff_indays = (date1, date2) => {
+  const dt1 = new Date(date1);
+  const dt2 = new Date(date2);
+  return Math.floor(
+    (Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) -
+      Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate())) /
+      (1000 * 60 * 60 * 24),
+  );
 };
