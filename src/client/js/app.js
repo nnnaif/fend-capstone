@@ -56,7 +56,6 @@ const getCoords = (cityName) => {
       return {
         latitude: res.geonames[0].lat,
         longitude: res.geonames[0].lng,
-        // country: res.geonames[0].countryName,
       };
     });
 };
